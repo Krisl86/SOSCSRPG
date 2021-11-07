@@ -1,21 +1,77 @@
-﻿using Engine.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Engine.Models;
+using Engine.Factories;
+using Engine.Command;
+using Engine.Converters;
+using System.ComponentModel;
 
 namespace Engine.ViewModels
 {
-    class GameSession
+    public class GameSession : INotifyPropertyChanged
     {
-        public Player CurrentPlayer { get; set; }
+        private Location _currentLocation;
+        private DirectionStringToCoordinateChangeConverter _directionChange = new DirectionStringToCoordinateChangeConverter();
+
+        public Player CurrentPlayer { get; private set; }
+        public World CurrentWorld { get; private set; }
+        public Location CurrentLocation
+        { 
+            get => _currentLocation;
+            private set
+            {
+                _currentLocation = value;
+                OnPropertyChanged(nameof(CurrentLocation));
+            }
+        }
+        public RelayCommand MoveCommand { get; private set; }
 
         public GameSession()
         {
             this.CurrentPlayer = new Player
             {
                 Name = "Scott",
-                Gold = 0
+                Gold = 1000000,
+                CharacterClass = "Fighter",
+                HitPoints = 10,
+                ExperiencePoints = 0,
+                Level = 1
             };
+
+            WorldFactory factory = new WorldFactory();
+            this.CurrentWorld = factory.CreateWorld();
+
+            this.CurrentLocation = this.CurrentWorld.LocationAt(0, -1);
+
+            this.MoveCommand = new RelayCommand(this.Move, this.CanMove);
         }
+
+        #region PropertyChangedEventHandler
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+        #endregion
+
+        #region MoveCommand
+        public bool CanMove(object direction)
+        {
+            int[] directionChange = this._directionChange.Convert(((string)direction).ToLower());
+
+            return this.CurrentWorld.LocationAt(this.CurrentLocation.XCoordinate + directionChange[0],
+                                                this.CurrentLocation.YCoordinate + directionChange[1]) != null;
+        }
+
+        public void Move(object direction)
+        {
+            int[] directionChange = this._directionChange.Convert(((string)direction).ToLower());
+
+            this.CurrentLocation = this.CurrentWorld.LocationAt(this.CurrentLocation.XCoordinate + directionChange[0],
+                                                                this.CurrentLocation.YCoordinate + directionChange[1]);
+        }
+        #endregion
     }
 }
