@@ -40,8 +40,7 @@ namespace Engine.ViewModels
                 Level = 1
             };
 
-            WorldFactory factory = new WorldFactory();
-            this.CurrentWorld = factory.CreateWorld();
+            this.CurrentWorld = WorldFactory.CreateWorld();
 
             this.CurrentLocation = this.CurrentWorld.LocationAt(0, -1);
 
@@ -59,10 +58,13 @@ namespace Engine.ViewModels
 
         public void Move(object direction)
         {
-            int[] directionChange = this._directionChange.Convert(((string)direction).ToLower());
+            if (this.CanMove(direction)) // check outside the UI if the player can move...just in case...
+            {
+                int[] directionChange = this._directionChange.Convert(((string)direction).ToLower());
 
-            this.CurrentLocation = this.CurrentWorld.LocationAt(this.CurrentLocation.XCoordinate + directionChange[0],
-                                                                this.CurrentLocation.YCoordinate + directionChange[1]);
+                this.CurrentLocation = this.CurrentWorld.LocationAt(this.CurrentLocation.XCoordinate + directionChange[0],
+                                                                    this.CurrentLocation.YCoordinate + directionChange[1]);
+            } 
         }
         #endregion
     }
