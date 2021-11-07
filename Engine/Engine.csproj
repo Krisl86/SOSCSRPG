@@ -37,6 +37,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Base\BaseNotificationClass.cs" />
     <Compile Include="Command\RelayCommand.cs" />
     <Compile Include="Converters\DirectionStringToCoordinateChangeConverter.cs" />
     <Compile Include="Factories\WorldFactory.cs" />

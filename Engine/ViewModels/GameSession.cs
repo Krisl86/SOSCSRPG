@@ -5,11 +5,12 @@ using Engine.Models;
 using Engine.Factories;
 using Engine.Command;
 using Engine.Converters;
+using Engine.Base;
 using System.ComponentModel;
 
 namespace Engine.ViewModels
 {
-    public class GameSession : INotifyPropertyChanged
+    public class GameSession : BaseNotificationClass
     {
         private Location _currentLocation;
         private DirectionStringToCoordinateChangeConverter _directionChange = new DirectionStringToCoordinateChangeConverter();
@@ -22,7 +23,7 @@ namespace Engine.ViewModels
             private set
             {
                 _currentLocation = value;
-                OnPropertyChanged(nameof(CurrentLocation));
+                base.OnPropertyChanged(nameof(CurrentLocation));
             }
         }
         public RelayCommand MoveCommand { get; private set; }
@@ -46,15 +47,6 @@ namespace Engine.ViewModels
 
             this.MoveCommand = new RelayCommand(this.Move, this.CanMove);
         }
-
-        #region PropertyChangedEventHandler
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-        #endregion
 
         #region MoveCommand
         public bool CanMove(object direction)
