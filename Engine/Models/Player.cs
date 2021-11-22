@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Text;
 using Engine.Base;
@@ -20,8 +21,11 @@ namespace Engine.Models
             get => _name;
             set
             {
-                _name = value;
-                base.OnPropertyChanged(nameof(Name));
+                if (value != _name)
+                {
+                    _name = value;
+                    base.OnPropertyChanged(nameof(Name));
+                }  
             } 
         }
         public string CharacterClass
@@ -29,8 +33,11 @@ namespace Engine.Models
             get => _characterClass;
             set
             {
-                _characterClass = value;
-                base.OnPropertyChanged(nameof(CharacterClass));
+                if (value != _characterClass)
+                {
+                    _characterClass = value;
+                    base.OnPropertyChanged(nameof(CharacterClass));
+                }      
             }
         }
         public int HitPoints
@@ -38,17 +45,23 @@ namespace Engine.Models
             get => _hitPoints;
             set
             {
-                _hitPoints = value;
-                base.OnPropertyChanged(nameof(HitPoints));
+                if (value != _hitPoints)
+                {
+                    _hitPoints = value;
+                    base.OnPropertyChanged(nameof(HitPoints));
+                }
             }
         }
         public int ExperiencePoints 
         {
             get => _experiencePoints;
             set 
-            { 
-                _experiencePoints = value;
-                base.OnPropertyChanged(nameof(ExperiencePoints));
+            {
+                if (value != _experiencePoints)
+                {
+                    _experiencePoints = value;
+                    base.OnPropertyChanged(nameof(ExperiencePoints));
+                }  
             }
         }
         public int Level
@@ -56,8 +69,11 @@ namespace Engine.Models
             get => _level;
             set
             {
-                _level = value;
-                base.OnPropertyChanged(nameof(Level));
+                if (value != _level)
+                {
+                    _level = value;
+                    base.OnPropertyChanged(nameof(Level));
+                }
             }
         }
         public int Gold
@@ -65,10 +81,18 @@ namespace Engine.Models
             get => _gold;
             set
             {
-                _gold = value;
-                base.OnPropertyChanged(nameof(Gold));
+                if (value != _gold)
+                {
+                    _gold = value;
+                    base.OnPropertyChanged(nameof(Gold));
+                }
             }
         }
+        public ObservableCollection<GameItem> Inventory { get; set; }
 
+        public Player()
+        {
+            Inventory = new ObservableCollection<GameItem>();
+        }
     }
 }

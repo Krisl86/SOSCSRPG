@@ -6,11 +6,12 @@ namespace Engine.Models
 {
     public class World
     {
-        private List<Location> _locations = new List<Location>();
+        private List<Location> _locations;
+        public List<Location> Locations => _locations ?? (_locations = new List<Location>());
         
         internal void AddLocation(int xCoordinate, int yCoordinate, string name, string description, string imageName)
         {
-            _locations.Add(new Location
+            this.Locations.Add(new Location
             {
                 XCoordinate = xCoordinate,
                 YCoordinate = yCoordinate,
@@ -22,7 +23,7 @@ namespace Engine.Models
 
         public Location LocationAt(int xCoordinate, int yCoordinate)
         {
-            foreach (Location loc in _locations)
+            foreach (Location loc in this.Locations)
             {
                 if (loc.XCoordinate == xCoordinate && loc.YCoordinate == yCoordinate)
                 {

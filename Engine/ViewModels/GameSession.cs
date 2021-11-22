@@ -13,7 +13,8 @@ namespace Engine.ViewModels
     public class GameSession : BaseNotificationClass
     {
         private Location _currentLocation;
-        private DirectionStringToCoordinateChangeConverter _directionChange = new DirectionStringToCoordinateChangeConverter();
+        private DirectionStringToCoordinateChangeConverter _directionChange;
+        public DirectionStringToCoordinateChangeConverter DirectionChange => _directionChange ?? (_directionChange = new DirectionStringToCoordinateChangeConverter());
 
         public Player CurrentPlayer { get; private set; }
         public World CurrentWorld { get; private set; }
@@ -50,7 +51,7 @@ namespace Engine.ViewModels
         #region MoveCommand
         public bool CanMove(object direction)
         {
-            int[] directionChange = this._directionChange.Convert(((string)direction).ToLower());
+            int[] directionChange = this.DirectionChange.Convert(((string)direction).ToLower());
 
             return this.CurrentWorld.LocationAt(this.CurrentLocation.XCoordinate + directionChange[0],
                                                 this.CurrentLocation.YCoordinate + directionChange[1]) != null;
@@ -60,7 +61,7 @@ namespace Engine.ViewModels
         {
             if (this.CanMove(direction)) // check outside the UI if the player can move...just in case...
             {
-                int[] directionChange = this._directionChange.Convert(((string)direction).ToLower());
+                int[] directionChange = this.DirectionChange.Convert(((string)direction).ToLower());
 
                 this.CurrentLocation = this.CurrentWorld.LocationAt(this.CurrentLocation.XCoordinate + directionChange[0],
                                                                     this.CurrentLocation.YCoordinate + directionChange[1]);
