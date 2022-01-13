@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Engine.Models;
-using Engine.Factories;
+﻿using Engine.Base;
 using Engine.Command;
 using Engine.Converters;
-using Engine.Base;
-using System.ComponentModel;
+using Engine.Factories;
+using Engine.Models;
+using System.Linq;
 
 namespace Engine.ViewModels
 {
@@ -25,6 +22,8 @@ namespace Engine.ViewModels
             {
                 _currentLocation = value;
                 base.OnPropertyChanged(nameof(CurrentLocation));
+
+                GivePlayerQuestAtLocation();
             }
         }
         public RelayCommand MoveCommand { get; private set; }
@@ -68,5 +67,16 @@ namespace Engine.ViewModels
             } 
         }
         #endregion
+
+        private void GivePlayerQuestAtLocation()
+        {
+            foreach (var quest in CurrentLocation.AvailableQuests)
+            {
+                if (!CurrentPlayer.Quests.Any(q => q.PlayerQuest.Id == quest.Id))
+                {
+                    CurrentPlayer.Quests.Add(new QuestStatus(quest));
+                }
+            }
+        }
     }
 }
