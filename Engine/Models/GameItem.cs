@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Engine.Models
 {
-    public abstract class GameItem
+    public class GameItem
     {
         public int ItemTypeId { get; protected set; }
         public string ItemName { get; protected set; }
@@ -17,6 +17,10 @@ namespace Engine.Models
             this.ItemPrice = itemPrice;
         }
 
-        public abstract GameItem Clone();
+        public virtual GameItem Clone()
+        {
+            return new GameItem(this.ItemTypeId, this.ItemName, this.ItemPrice);
+
+        }
     }
 }
